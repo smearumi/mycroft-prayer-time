@@ -1,0 +1,53 @@
+{
+    "name": "Prayer Time",
+    "color": "#22a7f0",
+    "skillMetadata":
+        {
+           "sections":
+            [
+                {
+                   "name": "Configuration",
+                   "fields":
+                    [
+                        {
+                            "type": "label",
+                            "label": "Get notified about your prayer time."
+                        },
+                        {
+                            "name": "city",
+                            "type": "text",
+                            "label": "City:",
+                            "value": ""
+                        },
+                        {
+                            "name": "country",
+                            "type": "text",
+                            "label": "Country:",
+                            "value": ""
+                        },
+                        {
+                            "name": "method",
+                            "type": "select",
+                            "options": "Shia Ithna-Ansari|0;University of Islamic Sciences, Karachi|1;Islamic Society of North America|2;Muslim World League|3;Umm Al-Qura University, Makkah (default)|4;Egyptian General Authority of Survey|5;Institute of Geophysics, University of Tehran|7;Gulf Region|8;Diyanet İşleri Başkanlığı, Turkey|13;Spiritual Administration of Muslims of Russia|14",
+                            "label": "Method:",
+                            "value": "4"
+                        },
+                        {
+                            "name": "school",
+                            "type": "select",
+                            "options": "Shafi|0;Hanafi|1",
+                            "label": "School:",
+                            "value": "1"
+                        },
+                        {
+                            "name": "adhan",
+                            "type": "select",
+                            "options": "Ahmad al Nafees|a1;Hafiz Mustafa Özcan (Turkey)|a2;Mishary Rashid Alafasy (Dubai's One TV)|a4",
+                            "label": "Adhan by:",
+                            "value": "a4"
+                        }
+                    ]
+                }
+            ]
+        }
+}
