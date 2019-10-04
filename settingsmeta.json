@@ -14,18 +14,6 @@
                             "label": "Get notified about your prayer time."
                         },
                         {
-                            "name": "city",
-                            "type": "text",
-                            "label": "City:",
-                            "value": ""
-                        },
-                        {
-                            "name": "country",
-                            "type": "text",
-                            "label": "Country:",
-                            "value": ""
-                        },
-                        {
                             "name": "method",
                             "type": "select",
                             "options": "Shia Ithna-Ansari|0;University of Islamic Sciences, Karachi|1;Islamic Society of North America|2;Muslim World League|3;Umm Al-Qura University, Makkah (default)|4;Egyptian General Authority of Survey|5;Institute of Geophysics, University of Tehran|7;Gulf Region|8;Diyanet İşleri Başkanlığı, Turkey|13;Spiritual Administration of Muslims of Russia|14",
