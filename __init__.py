@@ -72,7 +72,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.speak_dialog("stop.mpt")
 
     @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Prayer")
-                    .require("Time").optionally("Next").optionally("Notify"))
+                    .require("Time").require("Next").optionally("Notify"))
     def handle_next_intent(self, message):
         if not self.prayer_times:
             self.handle_stop_intent("stop prayer time")
