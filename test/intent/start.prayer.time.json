@@ -1,0 +1,9 @@
+{
+  "utterance": "start prayer time",
+  "intent_type": "StartPrayerTimeIntent",
+  "intent": {
+    "Start": "start",
+    "PrayerTime": "prayer time"
+  },
+  "expected_dialog": "start.mpt"
+}

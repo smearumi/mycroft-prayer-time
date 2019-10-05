@@ -1,0 +1,10 @@
+{
+    "utterance": "next prayer time",
+    "intent_type": "NextPrayerTimeIntent",
+    "intent": {
+      "Next": "next",
+      "PrayerTime": "prayer time"
+    },
+    "expected_dialog": "next.mpt"
+  }
+  
