@@ -21,7 +21,7 @@ from mycroft.util.format import nice_time
 from mycroft.util import get_cache_directory
 from mycroft.skills.core import intent_handler
 from mycroft.util.time import now_local, default_timezone
-from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
+from mycroft.skills.common_play_skill import CommonPlaySkill
 
 
 class PrayerTimeSkill(CommonPlaySkill):
@@ -156,7 +156,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         for key, value in self.prayer_times.items():
             self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
 
-            if current_time < value.replace(tzinfo=default_timezone():
+            if current_time < value.replace(tzinfo=default_timezone()):
                 self.schedule_event(
                                 self.play_adhan,
                                 value,
