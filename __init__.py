@@ -74,6 +74,10 @@ class PrayerTimeSkill(CommonPlaySkill):
     @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Next")
                     .require("PrayerTime"))
     def handle_next_intent(self, message):
+        if not self.prayer_times:
+            self.handle_stop_intent("stop prayer time")
+            return
+
         current_time = now_local()
         self.log.error(current_time)
 
