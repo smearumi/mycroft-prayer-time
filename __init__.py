@@ -63,7 +63,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.cancel_scheduled_event(name="PrayerTime")
 
         if self.prayer_times:
-            for key, in self.prayer_times:
+            for key in self.prayer_times:
                 self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
 
         self.prayer_times = None
@@ -79,7 +79,6 @@ class PrayerTimeSkill(CommonPlaySkill):
             return
 
         current_time = now_local()
-        self.log.error(current_time)
 
         next_prayer_time = None
 
@@ -128,8 +127,6 @@ class PrayerTimeSkill(CommonPlaySkill):
                                         second=0) + timedelta(days=1)
         self.interval = int((next_event - start_event).total_seconds())
 
-        # self._schedule_event()
-        self.log.error(start_event)
         self.cancel_scheduled_event(name="PrayerTime")
 
         self.schedule_repeating_event(
@@ -137,8 +134,6 @@ class PrayerTimeSkill(CommonPlaySkill):
                                     to_system(start_event),
                                     self.interval,
                                     name="PrayerTime")
-
-        self.log.error(self.interval)
 
     def _schedule_event(self):
         self.log.error("_schedule_event")
@@ -166,7 +161,6 @@ class PrayerTimeSkill(CommonPlaySkill):
             return
 
         current_time = now_local()
-        self.log.error(current_time)
 
         for key, value in self.prayer_times.items():
             self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
@@ -210,12 +204,6 @@ class PrayerTimeSkill(CommonPlaySkill):
         maghrib = datetime.strptime(prayer_times['Maghrib'], "%H:%M")
         isha = datetime.strptime(prayer_times['Isha'], "%H:%M")
 
-        # fajr = datetime.strptime("04:20", "%H:%M")
-        # dhuhr = datetime.strptime("04:27", "%H:%M")
-        # asr = datetime.strptime("05:10", "%H:%M")
-        # maghrib = datetime.strptime("05:12", "%H:%M")
-        # isha = datetime.strptime("05:15", "%H:%M")
-
         current_time = datetime.now()
         default_time_zone = default_timezone()
 
@@ -254,12 +242,6 @@ class PrayerTimeSkill(CommonPlaySkill):
                         'Asar': asr,
                         'Maghreeb': maghrib,
                         'Isha': isha}
-
-        # prayer_times = {'Fajr': 5,
-        #                 'Dhuhr': 10,
-        #                 'Asar': 15,
-        #                 'Maghreeb': 20,
-        #                 'Isha': 25}
 
         return prayer_times
 
