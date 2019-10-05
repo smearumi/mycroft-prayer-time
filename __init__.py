@@ -34,7 +34,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.first_time_event_flag = True
 
     def initialize(self):
-        self.handle_start_intent("start prayer time")
+        self.start_schedule_event()
 
     def CPS_match_query_phrase(self, phrase):
         pass
@@ -49,9 +49,52 @@ class PrayerTimeSkill(CommonPlaySkill):
             self.speak_dialog("status.mpt", {"status": "stop"})
             return
 
-        else:
-            self.speak_dialog("start.mpt")
+        self.start_schedule_event()
+        self.speak_dialog("start.mpt")
 
+    @intent_handler(IntentBuilder("StopPrayerTimeIntent").require("Stop")
+                    .require("PrayerTime"))
+    def handle_stop_intent(self, message):
+        if self.first_time_event_flag:
+            self.speak_dialog("status.mpt", {"status": "start"})
+            return
+
+        self.first_time_event_flag = True
+        self.cancel_scheduled_event(name="PrayerTime")
+
+        if self.prayer_times:
+            for key, in self.prayer_times:
+                self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
+
+        self.prayer_times = None
+
+        self.stop()
+        self.speak_dialog("stop.mpt")
+
+    @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Next")
+                    .require("PrayerTime"))
+    def handle_next_intent(self, message):
+        current_time = now_local()
+        self.log.error(current_time)
+
+        next_prayer_time = None
+
+        for key, value in self.prayer_times.items():
+            if current_time < value:
+                next_prayer_time = {key: value}
+                break
+
+        if not next_prayer_time:
+            next_prayer_time = {'Fajr': self.prayer_times['Fajr']}
+
+        self.speak_dialog(
+                "next.mpt",
+                {"prayer": list(next_prayer_time.keys())[0],
+                 "time": nice_time(
+                            next_prayer_time[list(next_prayer_time.keys())[0]],
+                            use_ampm=True)})
+
+    def start_schedule_event(self):
         self.curl = None
 
         try:
@@ -72,8 +115,9 @@ class PrayerTimeSkill(CommonPlaySkill):
 
         except Exception:
             self.speak_dialog("settings.error")
+            return
 
-        start_event = datetime.now()
+        start_event = now_local()
         next_event = start_event.replace(
                                         hour=0,
                                         minute=1,
@@ -90,40 +134,6 @@ class PrayerTimeSkill(CommonPlaySkill):
                                     name="PrayerTime")
 
         # self.log.error(self.get_scheduled_event_status("PrayerTime"))
-
-    @intent_handler(IntentBuilder("StopPrayerTimeIntent").require("Stop")
-                    .require("PrayerTime"))
-    def handle_stop_intent(self, message):
-        if not self.first_time_event_flag:
-            self.speak_dialog("status.mpt", {"status": "start"})
-            return
-
-        self.first_time_event_flag = True
-        self.cancel_scheduled_event(name="PrayerTime")
-
-        if self.prayer_times:
-            for key, in self.prayer_times:
-                self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
-
-        self.stop()
-        self.speak_dialog("stop.mpt")
-
-    @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Next")
-                    .require("PrayerTime"))
-    def handle_next_intent(self, message):
-        if not self.prayer_times:
-            return
-
-        current_time = now_local()
-        self.log.error(current_time)
-
-        for key, value in self.prayer_times.items():
-            if current_time < value.replace(tzinfo=default_timezone()):
-                self.speak_dialog(
-                                "next.mpt",
-                                {"prayer": key,
-                                 "time": nice_time(value, use_ampm=True)})
-                break
 
     def _schedule_event(self):
         self.log.error("_schedule_event")
@@ -156,7 +166,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         for key, value in self.prayer_times.items():
             self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
 
-            if current_time < value.replace(tzinfo=default_timezone()):
+            if current_time < value:
                 self.schedule_event(
                                 self.play_adhan,
                                 value,
@@ -206,27 +216,32 @@ class PrayerTimeSkill(CommonPlaySkill):
         fajr = fajr.replace(
                         year=current_time.year,
                         month=current_time.month,
-                        day=current_time.day)
+                        day=current_time.day,
+                        tzinfo=default_timezone())
 
         dhuhr = dhuhr.replace(
                         year=current_time.year,
                         month=current_time.month,
-                        day=current_time.day)
+                        day=current_time.day,
+                        tzinfo=default_timezone())
 
         asr = asr.replace(
                         year=current_time.year,
                         month=current_time.month,
-                        day=current_time.day)
+                        day=current_time.day,
+                        tzinfo=default_timezone())
 
         maghrib = maghrib.replace(
                         year=current_time.year,
                         month=current_time.month,
-                        day=current_time.day)
+                        day=current_time.day,
+                        tzinfo=default_timezone())
 
         isha = isha.replace(
                         year=current_time.year,
                         month=current_time.month,
-                        day=current_time.day)
+                        day=current_time.day,
+                        tzinfo=default_timezone())
 
         prayer_times = {'Fajr': fajr,
                         'Dhuhr': dhuhr,
