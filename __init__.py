@@ -17,11 +17,11 @@ import requests
 from subprocess import Popen
 from datetime import datetime, timedelta
 from adapt.intent import IntentBuilder
+from mycroft.util.format import nice_time
 from mycroft.util import get_cache_directory
 from mycroft.skills.core import intent_handler
-from mycroft.util.format import nice_time, to_system
-from mycroft.util.time import now_local, default_timezone
 from mycroft.skills.common_play_skill import CommonPlaySkill
+from mycroft.util.time import now_local, to_system, default_timezone
 
 
 class PrayerTimeSkill(CommonPlaySkill):
@@ -174,7 +174,7 @@ class PrayerTimeSkill(CommonPlaySkill):
             if current_time < value:
                 self.schedule_event(
                                 self.play_adhan,
-                                value,
+                                to_system(value),
                                 name="PrayerTime{0}".format(key))
 
     def get_api_data(self):
@@ -217,36 +217,37 @@ class PrayerTimeSkill(CommonPlaySkill):
         # isha = datetime.strptime("05:15", "%H:%M")
 
         current_time = datetime.now()
+        default_time_zone = default_timezone()
 
         fajr = fajr.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_timezone())
+                        tzinfo=default_time_zone)
 
         dhuhr = dhuhr.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_timezone())
+                        tzinfo=default_time_zone)
 
         asr = asr.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_timezone())
+                        tzinfo=default_time_zone)
 
         maghrib = maghrib.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_timezone())
+                        tzinfo=default_time_zone)
 
         isha = isha.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_timezone())
+                        tzinfo=default_time_zone)
 
         prayer_times = {'Fajr': fajr,
                         'Dhuhr': dhuhr,
