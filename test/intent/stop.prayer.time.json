@@ -1,8 +1,8 @@
 {
-  "utterance": "stop prayer time",
+  "utterance": "prayer time off",
   "intent_type": "StoptPrayerTimeIntent",
   "intent": {
-    "Stop": "stop",
+    "Off": "off",
     "Prayer": "prayer",
     "Time": "time"
   },

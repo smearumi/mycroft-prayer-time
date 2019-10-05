@@ -42,8 +42,8 @@ class PrayerTimeSkill(CommonPlaySkill):
     def CPS_start(self, phrase, data):
         pass
 
-    @intent_handler(IntentBuilder("StartPrayerTimeIntent").require("Start")
-                    .require("Prayer").require("Time"))
+    @intent_handler(IntentBuilder("StartPrayerTimeIntent").require("On")
+                    .require("Prayer").require("Time").optionally("Turn"))
     def handle_start_intent(self, message):
         if not self.first_time_event_flag:
             self.speak_dialog("status.mpt", {"status": "stop"})
@@ -52,8 +52,8 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.start_schedule_event()
         self.speak_dialog("start.mpt")
 
-    @intent_handler(IntentBuilder("StopPrayerTimeIntent").require("Stop")
-                    .require("Prayer").require("Time"))
+    @intent_handler(IntentBuilder("StopPrayerTimeIntent").require("Off")
+                    .require("Prayer").require("Time").optionally("Turn"))
     def handle_stop_intent(self, message):
         if self.first_time_event_flag:
             self.speak_dialog("status.mpt", {"status": "start"})
@@ -71,8 +71,8 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.stop()
         self.speak_dialog("stop.mpt")
 
-    @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Next")
-                    .require("Prayer").require("Time"))
+    @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Prayer")
+                    .require("Time").optionally("Next").optionally("Notify"))
     def handle_next_intent(self, message):
         if not self.prayer_times:
             self.handle_stop_intent("stop prayer time")
