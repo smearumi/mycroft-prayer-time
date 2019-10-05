@@ -129,6 +129,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.interval = int((next_event - start_event).total_seconds())
 
         # self._schedule_event()
+        self.log.error(start_event)
         self.cancel_scheduled_event(name="PrayerTime")
 
         self.schedule_repeating_event(
@@ -137,7 +138,7 @@ class PrayerTimeSkill(CommonPlaySkill):
                                     self.interval,
                                     name="PrayerTime")
 
-        # self.log.error(self.get_scheduled_event_status("PrayerTime"))
+        self.log.error(self.interval)
 
     def _schedule_event(self):
         self.log.error("_schedule_event")
