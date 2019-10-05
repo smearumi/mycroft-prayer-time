@@ -56,7 +56,7 @@ class PrayerTimeSkill(CommonPlaySkill):
                     .require("Prayer").require("Time"))
     def handle_stop_intent(self, message):
         if self.first_time_event_flag:
-            self.speak_dialog("status.mpt", {"status": "stop"})
+            self.speak_dialog("status.mpt", {"status": "start"})
             return
 
         self.first_time_event_flag = True
