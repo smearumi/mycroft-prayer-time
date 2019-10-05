@@ -17,9 +17,9 @@ import requests
 from subprocess import Popen
 from datetime import datetime, timedelta
 from adapt.intent import IntentBuilder
-from mycroft.util.format import nice_time
 from mycroft.util import get_cache_directory
 from mycroft.skills.core import intent_handler
+from mycroft.util.format import nice_time, to_system
 from mycroft.util.time import now_local, default_timezone
 from mycroft.skills.common_play_skill import CommonPlaySkill
 
@@ -56,7 +56,7 @@ class PrayerTimeSkill(CommonPlaySkill):
                     .require("PrayerTime"))
     def handle_stop_intent(self, message):
         if self.first_time_event_flag:
-            self.speak_dialog("status.mpt", {"status": "start"})
+            self.speak_dialog("status.mpt", {"status": "stop"})
             return
 
         self.first_time_event_flag = True
@@ -134,7 +134,7 @@ class PrayerTimeSkill(CommonPlaySkill):
 
         self.schedule_repeating_event(
                                     self._schedule_event,
-                                    start_event,
+                                    to_system(start_event),
                                     self.interval,
                                     name="PrayerTime")
 
