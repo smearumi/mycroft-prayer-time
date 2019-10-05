@@ -2,8 +2,8 @@
 Automatic reminder for daily prayer times. As reminder, it plays Adhan (the call to prayer).
 
 ## About 
-Muslims around the world needs to pray in time five times a day. This skill gets
-prayer times for your local region from https://aladhan.com/ using API and play Adhan
+Muslims around the world need to pray in time five times a day. This skill gets
+prayer times for your local region from https://aladhan.com/ using API and plays Adhan
 in time. Also, anyone can get next prayer time update from this skill.
 
 This skill runs automatically when the mycroft starts.
