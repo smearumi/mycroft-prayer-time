@@ -3,7 +3,8 @@
     "intent_type": "NextPrayerTimeIntent",
     "intent": {
       "Next": "next",
-      "PrayerTime": "prayer time"
+      "Prayer": "prayer",
+      "Time": "time"
     },
     "expected_dialog": "next.mpt"
   }

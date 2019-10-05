@@ -3,7 +3,8 @@
   "intent_type": "StoptPrayerTimeIntent",
   "intent": {
     "Stop": "stop",
-    "PrayerTime": "prayer time"
+    "Prayer": "prayer",
+    "Time": "time"
   },
   "expected_dialog": "stop.mpt"
 }

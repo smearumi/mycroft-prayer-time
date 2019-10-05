@@ -43,7 +43,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         pass
 
     @intent_handler(IntentBuilder("StartPrayerTimeIntent").require("Start")
-                    .require("PrayerTime"))
+                    .require("Prayer").require("Time"))
     def handle_start_intent(self, message):
         if not self.first_time_event_flag:
             self.speak_dialog("status.mpt", {"status": "stop"})
@@ -53,7 +53,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.speak_dialog("start.mpt")
 
     @intent_handler(IntentBuilder("StopPrayerTimeIntent").require("Stop")
-                    .require("PrayerTime"))
+                    .require("Prayer").require("Time"))
     def handle_stop_intent(self, message):
         if self.first_time_event_flag:
             self.speak_dialog("status.mpt", {"status": "stop"})
@@ -72,7 +72,7 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.speak_dialog("stop.mpt")
 
     @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Next")
-                    .require("PrayerTime"))
+                    .require("Prayer").require("Time"))
     def handle_next_intent(self, message):
         if not self.prayer_times:
             self.handle_stop_intent("stop prayer time")
