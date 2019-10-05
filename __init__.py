@@ -18,6 +18,7 @@ from subprocess import Popen
 from datetime import datetime, timedelta
 from adapt.intent import IntentBuilder
 from mycroft.util.format import nice_time
+from mycroft.util.time import now_local
 from mycroft.util import get_cache_directory
 from mycroft.skills.core import intent_handler
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
@@ -47,6 +48,9 @@ class PrayerTimeSkill(CommonPlaySkill):
         if not self.first_time_event_flag:
             self.speak_dialog("status.mpt", {"status": "stop"})
             return
+
+        else:
+            self.speak_dialog("start.mpt")
 
         self.curl = None
 
@@ -110,7 +114,8 @@ class PrayerTimeSkill(CommonPlaySkill):
         if not self.prayer_times:
             return
 
-        current_time = datetime.now()
+        current_time = now_local()
+        self.log.error(current_time)
 
         for key, value in self.prayer_times.items():
             if current_time < value:
@@ -145,9 +150,8 @@ class PrayerTimeSkill(CommonPlaySkill):
             self.handle_stop_intent("stop prayer time")
             return
 
-        self.speak_dialog("start.mpt")
-
-        current_time = datetime.now()
+        current_time = now_local()
+        self.log.error(current_time)
 
         for key, value in self.prayer_times.items():
             self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
