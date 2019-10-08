@@ -3,8 +3,8 @@ Automatic reminder for daily prayer times. As reminder, it plays Adhan (the call
 
 ## About 
 Muslims around the world need to pray in time five times a day. This skill gets
-prayer times for your local region from https://aladhan.com/ using API and plays Adhan
-in time. Also, anyone can get next prayer time update from this skill.
+prayer times for the local region from https://aladhan.com/ using API and plays Adhan
+in time. Also, anyone can get next prayer time or today's prayer times updates using this skill.
 
 This skill runs automatically when the mycroft starts.
 
@@ -14,14 +14,17 @@ You should be able to install skill via `mycroft-msm install https://github.com/
 ## Configuration
 You can configure this skill via web interface (home.mycroft.ai). After a few minutes of having the skill installed, you should see configuration options in the https://account.mycroft.ai/skills location.
 
-Fill this out with your appropriate information and hit save.
+Choose and select your options and hit save.
 
 ## Examples 
 * "start prayer time"
+* "turn on prayer time"
 * "stop prayer time"
+* "turn off prayer time"
 * "tell me about the next prayer time"
 * "what's the latest prayer time"
 * "next prayer time"
+* "tell me today's prayer times"
 
 
 ## Credits 
@@ -30,13 +33,15 @@ S. M. Estiaque Ahmed (@smearumi)
 
 
 ## Category
-Daily
-**Information**
+**Daily**
+Information
 Productivity
 
 ## Tags
 #mycroft
 #skill
+#Islam
+#Muslim
 #prayer
 #time
 #home
