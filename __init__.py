@@ -19,9 +19,10 @@ from datetime import datetime, timedelta
 from adapt.intent import IntentBuilder
 from mycroft.util.format import nice_time
 from mycroft.util import get_cache_directory
+from mycroft.audio import wait_while_speaking
 from mycroft.skills.core import intent_handler
+from mycroft.util.time import now_local, to_system
 from mycroft.skills.common_play_skill import CommonPlaySkill
-from mycroft.util.time import now_local, to_system, default_timezone
 
 
 class PrayerTimeSkill(CommonPlaySkill):
@@ -63,13 +64,29 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.cancel_scheduled_event(name="PrayerTime")
 
         if self.prayer_times:
-            for key in self.prayer_times:
-                self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
+            for prayer_time in self.prayer_times:
+                self.cancel_scheduled_event(
+                                name="PrayerTime{0}".format(prayer_time[0]))
 
         self.prayer_times = None
 
         self.stop()
         self.speak_dialog("stop.mpt")
+
+    @intent_handler(IntentBuilder("TodayPrayerTimeIntent").require("Prayer")
+                    .require("Time").require("Today").optionally("Notify"))
+    def handle_today_intent(self, message):
+        if not self.prayer_times:
+            self.handle_stop_intent("stop prayer time")
+            return
+
+        for prayer_time in self.prayer_times:
+            self.speak_dialog(
+                        "today.mpt",
+                        {"prayer": prayer_time[0],
+                         "time": nice_time(prayer_time[1], use_ampm=True)})
+
+            wait_while_speaking()
 
     @intent_handler(IntentBuilder("NextPrayerTimeIntent").require("Prayer")
                     .require("Time").require("Next").optionally("Notify"))
@@ -82,13 +99,14 @@ class PrayerTimeSkill(CommonPlaySkill):
 
         next_prayer_time = None
 
-        for key, value in self.prayer_times.items():
-            if current_time < value:
-                next_prayer_time = {key: value}
+        for prayer_time in self.prayer_times:
+            if current_time < prayer_time[1]:
+                next_prayer_time = {prayer_time[0]: prayer_time[1]}
                 break
 
         if not next_prayer_time:
-            next_prayer_time = {'Fajr': self.prayer_times['Fajr']}
+            next_prayer_time = {
+                self.prayer_times[0][0]: self.prayer_times[0][1]}
 
         self.speak_dialog(
                 "next.mpt",
@@ -136,10 +154,6 @@ class PrayerTimeSkill(CommonPlaySkill):
                                     name="PrayerTime")
 
     def _schedule_event(self):
-        self.log.error("_schedule_event")
-        self.log.error(self.get_scheduled_event_status("PrayerTime"))
-        self.log.error(self.interval)
-
         if not self.first_time_event_flag and not self.interval == 86400:
             self.interval = 86400
             self.cancel_scheduled_event(name="PrayerTime")
@@ -162,14 +176,16 @@ class PrayerTimeSkill(CommonPlaySkill):
 
         current_time = now_local()
 
-        for key, value in self.prayer_times.items():
-            self.cancel_scheduled_event(name="PrayerTime{0}".format(key))
+        for prayer_time in self.prayer_times:
+            self.cancel_scheduled_event(
+                                    name="PrayerTime{0}".format(
+                                                            prayer_time[0]))
 
-            if current_time < value:
+            if current_time < prayer_time[1]:
                 self.schedule_event(
                                 self.play_adhan,
-                                to_system(value),
-                                name="PrayerTime{0}".format(key))
+                                to_system(prayer_time[1]),
+                                name="PrayerTime{0}".format(prayer_time[0]))
 
     def get_api_data(self):
         prayer_times = None
@@ -204,49 +220,47 @@ class PrayerTimeSkill(CommonPlaySkill):
         maghrib = datetime.strptime(prayer_times['Maghrib'], "%H:%M")
         isha = datetime.strptime(prayer_times['Isha'], "%H:%M")
 
-        current_time = datetime.now()
-        default_time_zone = default_timezone()
+        current_time = now_local()
 
         fajr = fajr.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_time_zone)
+                        tzinfo=current_time.tzinfo)
 
         dhuhr = dhuhr.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_time_zone)
+                        tzinfo=current_time.tzinfo)
 
         asr = asr.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_time_zone)
+                        tzinfo=current_time.tzinfo)
 
         maghrib = maghrib.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_time_zone)
+                        tzinfo=current_time.tzinfo)
 
         isha = isha.replace(
                         year=current_time.year,
                         month=current_time.month,
                         day=current_time.day,
-                        tzinfo=default_time_zone)
+                        tzinfo=current_time.tzinfo)
 
-        prayer_times = {'Fajr': fajr,
-                        'Dhuhr': dhuhr,
-                        'Asar': asr,
-                        'Maghreeb': maghrib,
-                        'Isha': isha}
+        prayer_times = [['Fojar', fajr],
+                        ['Dohor', dhuhr],
+                        ['Asar', asr],
+                        ['Magreeb', maghrib],
+                        ['Icha', isha]]
 
         return prayer_times
 
     def play_adhan(self):
-        self.log.error(self.get_scheduled_event_status("PrayerTime"))
         self.curl = None
 
         if os.path.exists(self.STREAM):
@@ -261,11 +275,8 @@ class PrayerTimeSkill(CommonPlaySkill):
                         shell=True)
 
         self.CPS_play(("file://" + self.STREAM, "audio/mpeg"))
-        self.log.error("Ajaan played!!!")
 
     def stop(self):
-        self.log.error("Stop PrayerTime")
-
         if self.curl:
             try:
                 self.curl.kill()
