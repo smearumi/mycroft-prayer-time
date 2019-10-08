@@ -1,0 +1,10 @@
+{
+    "utterance": "today prayer time",
+    "intent_type": "TodayPrayerTimeIntent",
+    "intent": {
+      "Today": "today",
+      "Prayer": "prayer",
+      "Time": "time"
+    },
+    "expected_dialog": "stop.mpt"
+}
