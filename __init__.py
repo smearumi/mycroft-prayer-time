@@ -84,7 +84,7 @@ class PrayerTimeSkill(CommonPlaySkill):
             self.speak_dialog(
                         "today.mpt",
                         {"prayer": prayer_time[0],
-                         "time": nice_time(prayer_time[1], use_ampm=True)})
+                         "time": nice_time(prayer_time[1])})
 
             wait_while_speaking()
 
@@ -109,11 +109,10 @@ class PrayerTimeSkill(CommonPlaySkill):
                 self.prayer_times[0][0]: self.prayer_times[0][1]}
 
         self.speak_dialog(
-                "next.mpt",
-                {"prayer": list(next_prayer_time.keys())[0],
-                 "time": nice_time(
-                            next_prayer_time[list(next_prayer_time.keys())[0]],
-                            use_ampm=True)})
+            "next.mpt",
+            {"prayer": list(next_prayer_time.keys())[0],
+             "time": nice_time(
+                        next_prayer_time[list(next_prayer_time.keys())[0]])})
 
     def start_schedule_event(self):
         self.curl = None
