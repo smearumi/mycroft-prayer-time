@@ -35,7 +35,6 @@ class PrayerTimeSkill(CommonPlaySkill):
         self.first_time_event_flag = True
 
     def initialize(self):
-        self.time_format = self.config_core['time_format']
         self.start_schedule_event()
 
     def CPS_match_query_phrase(self, phrase):
@@ -81,22 +80,17 @@ class PrayerTimeSkill(CommonPlaySkill):
             self.handle_stop_intent("stop prayer time")
             return
 
-        if self.time_format == "full":
-            time_format_24hour = True
-            time_format_ampm = False
-
-        else:
-            time_format_24hour = False
-            time_format_ampm = True
+        use_ampm = bool(not self.config_core.get('time_format') == "full")
+        use_24hour = bool(self.config_core.get('time_format') == "full")
 
         for prayer_time in self.prayer_times:
             self.speak_dialog(
                         "today.mpt",
                         {"prayer": prayer_time[0],
                          "time": nice_time(
-                                    prayer_time[1],
-                                    use_24hour=time_format_24hour,
-                                    use_ampm=time_format_ampm)})
+                                        prayer_time[1],
+                                        use_24hour=use_24hour,
+                                        use_ampm=use_ampm)})
 
             wait_while_speaking()
 
@@ -120,21 +114,16 @@ class PrayerTimeSkill(CommonPlaySkill):
             next_prayer_time = {
                 self.prayer_times[0][0]: self.prayer_times[0][1]}
 
-        if self.time_format == "full":
-            time_format_24hour = True
-            time_format_ampm = False
-
-        else:
-            time_format_24hour = False
-            time_format_ampm = True
+        use_ampm = bool(not self.config_core.get('time_format') == "full")
+        use_24hour = bool(self.config_core.get('time_format') == "full")
 
         self.speak_dialog(
                 "next.mpt",
                 {"prayer": list(next_prayer_time.keys())[0],
                  "time": nice_time(
                             next_prayer_time[list(next_prayer_time.keys())[0]],
-                            use_24hour=time_format_24hour,
-                            use_ampm=time_format_ampm)})
+                            use_24hour=use_24hour,
+                            use_ampm=use_ampm)})
 
     def start_schedule_event(self):
         self.curl = None
